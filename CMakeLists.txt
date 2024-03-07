@@ -8,14 +8,11 @@ set(HEADER_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/include/Window.h
 )
 
-set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl, --allow-shlib-undefined" )
 set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl, -undefined" )
-
-set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -undefined dynamic_lookup")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/External/glfw)
 
-add_library(noe STATIC
+add_library(noe SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/External/glad/src/glad.c
     ${CMAKE_CURRENT_SOURCE_DIR}/External/glfw/src/libglfw3.a
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
