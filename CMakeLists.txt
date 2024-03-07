@@ -2,24 +2,38 @@ cmake_minimum_required(VERSION 3.18)
 
 project(noe)
 
-add_subdirectory(External/glfw)
-
-add_library(noe STATIC
-    External/glad/src/glad.c
+set(HEADER_FILES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Noe.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Core.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Window.h
 )
 
-set_target_properties(noe PROPERTIES PUBLIC_HEADER include/noe.h)
+set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl, --allow-shlib-undefined" )
+set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl, -undefined" )
+
+set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS} -undefined dynamic_lookup")
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/External/glfw)
+
+add_library(noe STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/glad/src/glad.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/glfw/src/libglfw3.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
+    ${HEADER_FILES}
+)
+
+set_target_properties(noe PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/noe.h)
 
 target_include_directories(noe
-    PUBLIC External/glad/include
-    PUBLIC External/glfw/include
-    PUBLIC include
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/External/glad/include
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/External/glfw/include
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_directories(noe
-    PRIVATE External/glad/include
-    PRIVATE External/glfw/include
-    PRIVATE include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/External/glad/include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/External/glfw/include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 target_link_libraries(noe
